@@ -72,3 +72,64 @@ def replace_label(mask, label):
 # load the entire image segmentation pipeline
 img_segmentation_pipeline = pipeline('image-segmentation', 
                                      model="nvidia/segformer-b5-finetuned-ade-640-640")
+output = img_segmentation_pipeline(image)
+output
+
+output[0]['mask']
+
+output[2]['mask']
+
+# load the feature extractor (to preprocess images) and the model (to get outputs)
+W, H = image.size
+segmentation_mask = np.zeros((H, W), dtype=np.uint8)
+
+for i in range(len(output)):
+  segmentation_mask += replace_label(output[i]['mask'], i)
+
+# overlay the predicted segmentation masks on the original image
+segmented_img = overlay_segments(image_tensor.permute(1, 2, 0), segmentation_mask)
+
+# convert to PIL Image
+Image.fromarray(segmented_img)
+
+# load the feature extractor (to preprocess images) and the model (to get outputs)
+feature_extractor = SegformerImageProcessor.from_pretrained("nvidia/segformer-b5-finetuned-ade-640-640")
+model = SegformerForSemanticSegmentation.from_pretrained("nvidia/segformer-b5-finetuned-ade-640-640")
+
+def to_tensor(image):
+  """Convert PIL Image to pytorch tensor."""
+  transform = transforms.ToTensor()
+  image_tensor = image.convert("RGB")
+  image_tensor = transform(image_tensor)
+  return image_tensor
+
+# a function that takes an image and return the segmented image
+def get_segmented_image(model, feature_extractor, image_path):
+  """Return the predicted segmentation mask for the input image."""
+  # load the image
+  image = load_image(image_path)
+  # preprocess input
+  inputs = feature_extractor(images=image, return_tensors="pt")
+  # convert to pytorch tensor
+  image_tensor = to_tensor(image)
+  # pass the processed input to the model
+  outputs = model(**inputs)
+  print("outputs.logits.shape:", outputs.logits.shape)
+  # interpolate output logits to the same shape as the input image
+  upsampled_logits = F.interpolate(
+      outputs.logits, # tensor to be interpolated
+      size=image_tensor.shape[1:], # output size we want
+      mode='bilinear', # do bilinear interpolation
+      align_corners=False)
+
+  # get the class with max probabilities
+  segmentation_mask = upsampled_logits.argmax(dim=1)[0]
+  print(f"{segmentation_mask.shape=}")
+  # get the segmented image
+  segmented_img = overlay_segments(image_tensor.permute(1, 2, 0), segmentation_mask)
+  # convert to PIL Image
+  return Image.fromarray(segmented_img)
+
+get_segmented_image(model, feature_extractor, "https://shorthaircatbreeds.com/wp-content/uploads/2020/06/Urban-cat-crossing-a-road-300x180.jpg")
+
+get_segmented_image(model, feature_extractor, "http://images.cocodataset.org/test-stuff2017/000000000001.jpg")
