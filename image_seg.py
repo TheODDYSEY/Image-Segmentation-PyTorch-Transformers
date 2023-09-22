@@ -61,3 +61,14 @@ def overlay_segments(image, seg_mask):
   img = img_weight * np.array(image) * 255 + (1 - img_weight) * image_mask
   return img.astype(np.uint8)  
 
+def replace_label(mask, label):
+  """Replace the segment masks values with label."""
+  mask = np.array(mask)
+  mask[mask == 255] = label
+  return mask
+
+# Image segmentation using Hugging face Pipeline APi
+
+# load the entire image segmentation pipeline
+img_segmentation_pipeline = pipeline('image-segmentation', 
+                                     model="nvidia/segformer-b5-finetuned-ade-640-640")
