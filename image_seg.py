@@ -31,3 +31,14 @@ image
 transform = transforms.ToTensor()
 image_tensor = image.convert("RGB")
 image_tensor = transform(image_tensor)
+def color_palette():
+  """Color palette to map each class to its corresponding color."""
+  return [[0, 128, 128],
+          [255, 170, 0],
+          [161, 19, 46],
+          [118, 171, 47],
+          [255, 255, 0],
+          [84, 170, 127],
+          [170, 84, 127],
+          [33, 138, 200],
+          [255, 84, 0]]
