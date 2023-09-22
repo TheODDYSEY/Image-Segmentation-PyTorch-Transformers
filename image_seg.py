@@ -42,3 +42,22 @@ def color_palette():
           [170, 84, 127],
           [33, 138, 200],
           [255, 84, 0]]
+  
+def overlay_segments(image, seg_mask):
+  """Return different segments predicted by the model overlaid on image."""
+  H, W = seg_mask.shape
+  image_mask = np.zeros((H, W, 3), dtype=np.uint8)
+  colors = np.array(color_palette())
+  # convert to a pytorch tensor if seg_mask is not one already
+  seg_mask = seg_mask if torch.is_tensor(seg_mask) else torch.tensor(seg_mask)
+  unique_labels = torch.unique(seg_mask)
+  # map each segment label to a unique color
+  for i, label in enumerate(unique_labels):
+    image_mask[seg_mask == label.item(), :] = colors[i]
+  image = np.array(image)
+  # percentage of original image in the final overlaid image
+  img_weight = 0.5 
+  # overlay input image and the generated segment mask
+  img = img_weight * np.array(image) * 255 + (1 - img_weight) * image_mask
+  return img.astype(np.uint8)  
+
