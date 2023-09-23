@@ -5,6 +5,8 @@ Semantic segmentation is a computer vision task that involves classifying each p
 
 ![Sample Segmentation](sample_segmentation.png)
 
+![segformer-architecture](https://github.com/TheODDYSEY/Image-Segmentation-PyTorch-Transformers/assets/98217039/a4251f66-2faa-4027-9424-eb322189ba8f)
+
 ## Table of Contents
 
 - [Introduction](#introduction)
