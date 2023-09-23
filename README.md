@@ -3,7 +3,7 @@
 
 Semantic segmentation is a computer vision task that involves classifying each pixel in an image into a specific category. This repository contains code for performing semantic segmentation using the Segformer model, a transformer-based architecture designed for image segmentation tasks.
 
-![Sample Segmentation](sample_segmentation.png)
+
 
 ![segformer-architecture](https://github.com/TheODDYSEY/Image-Segmentation-PyTorch-Transformers/assets/98217039/a4251f66-2faa-4027-9424-eb322189ba8f)
 
