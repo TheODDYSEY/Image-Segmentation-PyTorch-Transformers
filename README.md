@@ -1,4 +1,4 @@
-```markdown
+
 # Semantic Segmentation with Segformer
 
 Semantic segmentation is a computer vision task that involves classifying each pixel in an image into a specific category. This repository contains code for performing semantic segmentation using the Segformer model, a transformer-based architecture designed for image segmentation tasks.
