@@ -43,7 +43,7 @@ Before you begin, ensure you have met the following requirements:
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/your-username/semantic-segmentation.git
+   https://github.com/TheODDYSEY/Image-Segmentation-PyTorch-Transformers.git
    cd semantic-segmentation
    ```
 
